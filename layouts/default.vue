@@ -1,15 +1,26 @@
 <template>
   <div>
     <!-- 主页头部 -->
+    <Header></Header>
     <nuxt />
     <!-- 主页尾部 -->
+    <Footer></Footer>
   </div>
 </template>
-
-<style>
+<script>
+import Header from "@/components/header";
+import Footer from "@/components/footer"
+export default {
+  components: {
+    Header,
+    Footer
+  }
+};
+</script>
+<style lang="less">
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
