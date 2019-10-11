@@ -1,6 +1,8 @@
 <template>
   <div>
+    <!-- 主页头部 -->
     <nuxt />
+    <!-- 主页尾部 -->
   </div>
 </template>
 
