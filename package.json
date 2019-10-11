@@ -1,0 +1,22 @@
+{
+  "name": "xianyun",
+  "version": "1.0.0",
+  "description": "My breathtaking Nuxt.js project",
+  "author": "砥砺前行",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.6.0",
+    "element-ui": "^2.4.11",
+    "jquery": "^3.4.1",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "nuxt": "^2.0.0"
+  },
+  "devDependencies": {}
+}
