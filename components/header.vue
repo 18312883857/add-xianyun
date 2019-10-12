@@ -50,7 +50,10 @@
 export default {
   methods: {
     // 用户退出
-    handleLogout() {}
+    handleLogout() {
+      // 通过mutations方法清除存储在store里面的数据，使用commit可以调用mutations方法
+      this.$store.commit('user/setUserInfo',{})
+    }
   }
 };
 </script>
