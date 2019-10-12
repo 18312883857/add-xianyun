@@ -62,17 +62,13 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
     // console.log(123);
-    this.$axios({
-      method: "get",
+    let res = await this.$axios({
       url: "/scenics/banners"
-    }).then(res => {
-      console.log(res);
-      const { data } = res.data;
-      this.banners = data;
-      console.log(this.banners);
-    });
+    })
+    let {data} = res.data
+    this.banners = data
   }
 };
 </script>
