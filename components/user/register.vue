@@ -70,15 +70,42 @@ export default {
   },
   methods: {
     //   发送验证码
-    handleSendCaptcha() {
+    async handleSendCaptcha() {
         // 用户名不能为空
       if(!this.form.username){
-
+          this.$message.error('用户名不能为空')
+          return
       }
+      let res = await this.$axios({
+          url : '/captchas',
+          method : 'Post',
+          data : {tel : this.form.username}
+      })
+      let {code} = res.data
+      this.$message.success(`验证码为： ${code}`)
     },
     // 登录
     handleLoginSubmit() {
-      console.log(123);
+      this.$refs.form.validate(async valid=>{
+          let {checkPassword,...porops} = this.form
+          if(valid){
+              let res = await this.$axios({
+                  url : '/accounts/register',
+                  method : 'Post',
+                  data : porops
+              })
+              console.log(res)
+              let {status,data} = res
+              if(status === 200){
+                  this.$message.success('注册成功')
+                  setTimeout(()=>{
+                       this.$router.push("/")
+                    //  把用户注册的信息存储到独立仓库里，并且显示出来
+                    this.$store.commit('user/setUserInfo',data)
+                  },2000)
+              }
+          }
+      })
     }
   }
 };
