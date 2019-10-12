@@ -1,10 +1,11 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" class="form">
-    <el-form-item class="form-item">
+      <!-- prop是需要校验的表单字段 -->
+    <el-form-item class="form-item" prop="username">
       <el-input placeholder="用户名/手机" v-model="form.username"></el-input>
     </el-form-item>
-
-    <el-form-item class="form-item">
+    <!-- prop是需要校验的表单字段 -->
+    <el-form-item class="form-item" prop="password">
       <el-input placeholder="密码" type="password" v-model="form.password"></el-input>
     </el-form-item>
 
@@ -17,22 +18,48 @@
 </template>
 
 <script>
+import { async } from 'q';
 export default {
   data() {
     return {
       // 表单数据
       form: {
-        username : '',
-        password : ''
+        username: "",
+        password: ""
       },
       // 表单规则
-      rules: {}
+      rules: {
+        username: [
+          { required: true, message: "请输入活动名称", trigger: "blur" }
+        ],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+      }
     };
   },
   methods: {
     // 提交登录
-    handleLoginSubmit() {
-      console.log(this.form);
+     handleLoginSubmit() {
+        //  validate是element组件里表单里自带的一个属性 这个属性里是一个回调函数，有一个valid参数 
+      this.$refs.form.validate(async valid=>{
+        //   会返回一个布尔值 要么是true 要么是false
+          console.log(valid)
+        //   valid是表单验证的结果
+        if(valid){
+            // 提交登录的接口
+            let res = await this.$axios({
+                url : '/accounts/login',
+                method : 'Post',
+                data : this.form
+            })
+            let {status} = res
+            if(status === 200){
+                this.$message.success('登录成功')
+                setTimeout(()=>{
+                    this.$router.push('/')
+                },2000)
+            }
+        }
+      })
     }
   }
 };
