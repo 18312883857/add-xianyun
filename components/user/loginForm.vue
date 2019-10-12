@@ -54,6 +54,10 @@ export default {
             let {status} = res
             if(status === 200){
                 this.$message.success('登录成功')
+                let data = res.data
+                // 通过调用mutation下的方法掉修改state的值,commit方法调用mutations的方法
+                // 第一个参数是文件名，第二个参数是要登录成功后要传的参数
+                this.$store.commit('user/setUserInfo',data)
                 setTimeout(()=>{
                     this.$router.push('/')
                 },2000)

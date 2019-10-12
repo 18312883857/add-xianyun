@@ -18,8 +18,14 @@
 
       <!-- 登录/用户信息 -->
       <el-row type="flex" align="middle">
+        <!-- 不存在用户信息展示登录注册链接 -->
+        <nuxt-link
+          to="/user/login"
+          class="account-link"
+          v-if="!$store.state.user.userInfo.token"
+        >登录 / 注册</nuxt-link>
         <!-- 如果用户存在则展示用户信息，用户数据来自store -->
-        <el-dropdown v-if="false">
+        <el-dropdown v-else>
           <el-row type="flex" align="middle" class="el-dropdown-link">
             <nuxt-link to="#">
               <img src="http://157.122.54.189:9093/images/pic_sea.jpeg" />
@@ -36,9 +42,6 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-
-        <!-- 不存在用户信息展示登录注册链接 -->
-        <nuxt-link to="/user/login" class="account-link" v-else>登录 / 注册</nuxt-link>
       </el-row>
     </el-row>
   </header>
