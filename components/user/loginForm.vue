@@ -1,11 +1,11 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" class="form">
     <el-form-item class="form-item">
-      <el-input placeholder="用户名/手机"></el-input>
+      <el-input placeholder="用户名/手机" v-model="form.username"></el-input>
     </el-form-item>
 
     <el-form-item class="form-item">
-      <el-input placeholder="密码" type="password"></el-input>
+      <el-input placeholder="密码" type="password" v-model="form.password"></el-input>
     </el-form-item>
 
     <p class="form-text">
@@ -21,7 +21,10 @@ export default {
   data() {
     return {
       // 表单数据
-      form: {},
+      form: {
+        username : '',
+        password : ''
+      },
       // 表单规则
       rules: {}
     };
