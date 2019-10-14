@@ -26,19 +26,30 @@ export let actions = {
         // console.log(res)
         // 通过调用mutation下的方法掉修改state的值,commit方法调用mutations的方法
         // 第一个参数是文件名，第二个参数是要登录成功后要传的参数
-        if(res.status === 200){
+        if (res.status === 200) {
             // store相当于this.$store
             store.commit("setUserInfo", res.data);
         }
         // 返回整个fromise对象
         return res
     },
-    async register(store,tel){
+    // 验证码
+    async register(store, tel) {
         let res = await this.$axios({
-            url : '/captchas',
-            method : 'Post',
-            data : {tel}
+            url: '/captchas',
+            method: 'Post',
+            data: { tel }
         })
+        return res
+    },
+    // 注册
+    async enroll(store, data) {
+        let res = await this.$axios({
+            url: "/accounts/register",
+            method: "Post",
+            data
+        });
+        console.log(res)
         return res
     }
 }
