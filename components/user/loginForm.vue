@@ -1,6 +1,6 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" class="form">
-      <!-- prop是需要校验的表单字段 -->
+    <!-- prop是需要校验的表单字段 -->
     <el-form-item class="form-item" prop="username">
       <el-input placeholder="用户名/手机" v-model="form.username"></el-input>
     </el-form-item>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { async } from 'q';
+import { async } from "q";
 export default {
   data() {
     return {
@@ -38,32 +38,26 @@ export default {
   },
   methods: {
     // 提交登录
-     handleLoginSubmit() {
-        //  validate是element组件里表单里自带的一个属性 这个属性里是一个回调函数，有一个valid参数 
-      this.$refs.form.validate(async valid=>{
+    handleLoginSubmit() {
+      //  validate是element组件里表单里自带的一个属性 这个属性里是一个回调函数，有一个valid参数
+      this.$refs.form.validate(async valid => {
         //   会返回一个布尔值 要么是true 要么是false
-          console.log(valid)
+        // console.log(valid);
         //   valid是表单验证的结果
-        if(valid){
-            // 提交登录的接口
-            let res = await this.$axios({
-                url : '/accounts/login',
-                method : 'Post',
-                data : this.form
-            })
-            let {status} = res
-            if(status === 200){
-                this.$message.success('登录成功')
-                let data = res.data
-                // 通过调用mutation下的方法掉修改state的值,commit方法调用mutations的方法
-                // 第一个参数是文件名，第二个参数是要登录成功后要传的参数
-                this.$store.commit('user/setUserInfo',data)
-                setTimeout(()=>{
-                    this.$router.push('/')
-                },2000)
+        if (valid) {
+          // 提交登录的接口
+          // 调用actions方法修改state的值
+          this.$store.dispatch("user/login", this.form).then(res => {
+            let { status } = res;
+            if (status === 200) {
+              this.$message.success("登录成功");
+              setTimeout(() => {
+                this.$router.push("/");
+              }, 2000);
             }
+          });
         }
-      })
+      });
     }
   }
 };
