@@ -133,7 +133,11 @@ export default {
        this.queryDepartSearch(value,cb)
     },
     // 目标城市下拉选择时触发
-    handleDestSelect(item) {},
+    handleDestSelect(item) {
+        // console.log(item)
+        this.form.destCity = item.value
+        this.form.destCode = item.sort
+    },
 
     // 确认选择日期时触发
     handleDate(value) {},
