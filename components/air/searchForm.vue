@@ -23,7 +23,7 @@
           @select="handleDepartSelect"
           class="el-autocomplete"
           v-model="form.departCity"
-          @blur="autoBlur"
+          @blur="handleBlur(`dest`)"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="到达城市">
@@ -33,7 +33,7 @@
           @select="handleDestSelect"
           class="el-autocomplete"
           v-model="form.destCity"
-          @blur="autoBlur"
+          @blur="handleBlur(`depart`)"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="出发时间">
@@ -107,11 +107,17 @@ export default {
       //   console.log(this.list)
     },
     // 失去焦点事件，默认下拉列表选中第一个
-    autoBlur() {
+    handleBlur(type) {
       if (this.list.length > 0) {
         // 如果不在下拉列表中选择，则默认选中第一项
-        this.form.departCity = this.list[0].value;
-        this.form.departCode = this.list[0].sort;
+        if(type === 'dest'){
+            this.form.departCity = this.list[0].value
+            this.form.departCode = this.list[0].sort
+        }
+        if(type === 'depart'){
+            this.form.destCity = this.list[0].value
+            this.form.destCode = this.list[0].sort
+        }
       }
     },
     // 出发城市下拉选择时触发
@@ -125,7 +131,6 @@ export default {
     queryDestSearch(value, cb) {
     //   由于handleSearchTab事件实际上是一个函数，并且出发城市与目标城市做法是一样的，我们可以调用出发城市来完成目标城市的业务逻辑
        this.queryDepartSearch(value,cb)
-       
     },
     // 目标城市下拉选择时触发
     handleDestSelect(item) {},
