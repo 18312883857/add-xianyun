@@ -156,7 +156,36 @@ export default {
     handleReverse() {},
 
     // 提交表单是触发
-    handleSubmit() {}
+    handleSubmit() {
+        // 自定义规则
+        let rules = {
+            // 出发城市
+            // message是报错的信息 value是输入框的值 如果value的值是空，那么message报错
+            departCity : {message : '请输入出发城市',value : this.form.departCity},
+            // 目标城市
+            departCode : {message : '请输入目标城市',value : this.form.destCity},
+            // 出发日期
+            departDate : {message : '请输入出发日期',value : this.form.departDate}
+        }
+        // 循环rules这个对象，判断对象属性的value如果是空的，打印出message错误信息
+        // 设置一个开关
+        let valid = true
+        // 将rules转化成数组，调用数组的方法
+        Object.keys(rules).forEach(v=>{
+            let {message,value} = rules[v]
+            // 如果输入框的值为空，那么报错
+            if(value === ''){
+                this.$message.error(message)
+                valid = false
+            }
+        })
+        // 如果输入框的值为空，不执行下面的代码
+        if(!valid) return
+        // 跳转的时候，把整个表单的内容作为url地址的参数传递过去
+        // $route.query 一个 key/value 对象，表示 URL 查询参数。例如，对于路径 /foo?user=1，则有
+        // $route.query.user == 1，如果没有查询参数，则是个空对象
+        this.$router.push({path:'/air/flights',query:this.form})
+    }
   },
   mounted() {}
 };
