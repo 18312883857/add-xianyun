@@ -81,7 +81,9 @@ export default {
   methods: {
     // tab切换时触发
     handleSearchTab(item, index) {
-      console.log(123);
+       this.$alert('目前暂不支持往返，请使用单程选票！', '注意', {
+          confirmButtonText: '确定'
+        })
     },
     // 出发城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表，是用来展示的 函数里面是一个数组，数组里面是个对象 对象中必须要有value属性
@@ -153,7 +155,13 @@ export default {
     },
 
     // 触发和目标城市切换时触发
-    handleReverse() {},
+    handleReverse() {
+        let {departCode,departCity,destCode,destCity} = this.form
+        this.form.departCity = destCity
+        this.form.departCode = destCode
+        this.form.destCity = departCity
+        this.form.destCode = departCode
+    },
 
     // 提交表单是触发
     handleSubmit() {
