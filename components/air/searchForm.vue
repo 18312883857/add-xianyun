@@ -23,7 +23,7 @@
           @select="handleDepartSelect"
           class="el-autocomplete"
           v-model="form.departCity"
-          @blur="handleBlur(`dest`)"
+          @blur="handleBlur(`depart`)"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="到达城市">
@@ -33,7 +33,7 @@
           @select="handleDestSelect"
           class="el-autocomplete"
           v-model="form.destCity"
-          @blur="handleBlur(`depart`)"
+          @blur="handleBlur(`dest`)"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="出发时间">
@@ -58,6 +58,7 @@
 
 <script>
 import { async } from "q";
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -108,39 +109,48 @@ export default {
     },
     // 失去焦点事件，默认下拉列表选中第一个
     handleBlur(type) {
-      if (this.list.length > 0) {
-        // 如果不在下拉列表中选择，则默认选中第一项
-        if(type === 'dest'){
-            this.form.departCity = this.list[0].value
-            this.form.departCode = this.list[0].sort
-        }
-        if(type === 'depart'){
-            this.form.destCity = this.list[0].value
-            this.form.destCode = this.list[0].sort
-        }
-      }
+      // 旧方法
+      //   if (this.list.length > 0) {
+      //     // 如果不在下拉列表中选择，则默认选中第一项
+      //     if(type === 'dest'){
+      //         this.form.departCity = this.list[0].value
+      //         this.form.departCode = this.list[0].sort
+      //     }
+      //     if(type === 'depart'){
+      //         this.form.destCity = this.list[0].value
+      //         this.form.destCode = this.list[0].sort
+      //     }
+      //   }
+      // 如果输入框内没有值 就不显示默认内容
+      if (this.list.length === 0) return;
+      this.form[type + `City`] = this.list[0].value;
+      this.form[type + `Code`] = this.list[0].sort;
+      console.log(this.form);
     },
     // 出发城市下拉选择时触发
     handleDepartSelect(item) {
-    //   console.log(item);
-    this.form.departCity = item.value
-    this.form.departCode = item.sort
+      //   console.log(item);
+      this.form.departCity = item.value;
+      this.form.departCode = item.sort;
     },
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, cb) {
-    //   由于handleSearchTab事件实际上是一个函数，并且出发城市与目标城市做法是一样的，我们可以调用出发城市来完成目标城市的业务逻辑
-       this.queryDepartSearch(value,cb)
+      //   由于handleSearchTab事件实际上是一个函数，并且出发城市与目标城市做法是一样的，我们可以调用出发城市来完成目标城市的业务逻辑
+      this.queryDepartSearch(value, cb);
     },
     // 目标城市下拉选择时触发
     handleDestSelect(item) {
-        // console.log(item)
-        this.form.destCity = item.value
-        this.form.destCode = item.sort
+      // console.log(item)
+      this.form.destCity = item.value;
+      this.form.destCode = item.sort;
     },
 
     // 确认选择日期时触发
-    handleDate(value) {},
+    handleDate(value) {
+        this.form.departDate = moment(value).format('YYYY-MM-DD')
+        console.log(this.form.departDate)
+    },
 
     // 触发和目标城市切换时触发
     handleReverse() {},
