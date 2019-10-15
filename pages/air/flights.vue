@@ -4,12 +4,9 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
-
+        <FlightsFilters :data="flightsData"></FlightsFilters>
         <!-- 航班头部布局 -->
-
-        <FlightsListHead></FlightsListHead>
-
+        <FlightsListHead ></FlightsListHead>
         <!-- 航班信息 -->
         <FlightsItem v-for="(item,index) in dataList" :key="index" :data="item"></FlightsItem>
         <!-- 分页器 -->
@@ -41,12 +38,15 @@
 // import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead";
 import FlightsItem from "@/components/air/flightsItem";
+import FlightsFilters from "@/components/air/flightsFilters"
 export default {
   data() {
     return {
-      // 航班总数据
+      // 航班总数据 初始化数据  需要把整个对象传到过滤组件中
       flightsData: {
-        flights: []
+        flights: [],
+        info : {},
+        options : {}
       }, 
       
       pageIndex: 1,
@@ -56,7 +56,8 @@ export default {
   },
   components: {
     FlightsListHead,
-    FlightsItem
+    FlightsItem,
+    FlightsFilters
   },
   mounted() {
     this.$axios({
@@ -65,7 +66,7 @@ export default {
     }).then(res => {
       // 接收总数据
       this.flightsData = res.data;
-      // console.log(this.flightsData);
+      console.log(this.flightsData);
       // 第一页的数据
       // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
       this.laoding = false;
