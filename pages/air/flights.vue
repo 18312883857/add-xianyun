@@ -11,7 +11,7 @@
         <FlightsListHead></FlightsListHead>
 
         <!-- 航班信息 -->
-        <FlightsItem v-for="(item,index) in flightsData.flights" :key="index" :data="item"></FlightsItem>
+        <FlightsItem v-for="(item,index) in dataList" :key="index" :data="item"></FlightsItem>
         <!-- 分页器 -->
         <el-pagination
           @size-change="handleSizeChange"
@@ -40,6 +40,8 @@ export default {
   data() {
     return {
       flightsData: {}, // 航班总数据
+      // 从flights总列表数据中切割出来数组列表
+      dataList: [],
       pageIndex: 1,
       pageSize: 5
     };
@@ -55,12 +57,21 @@ export default {
     }).then(res => {
       // 接收总数据
       this.flightsData = res.data;
-      console.log(this.flightsData);
+      // 第一页的数据
+      this.dataList = this.flightsData.flights.slice(0,this.pageSize)
     });
   },
   methods: {
+    // 分页条数切换时候触发, val是当前的条数
     handleSizeChange(val) {},
-    handleCurrentChange(val) {}
+    // 页数切换时候触发, val是当前的页数
+    handleCurrentChange(val) {
+      // 当前切换的页数
+      this.pageIndex = val
+      // 利用pageIndex和pageSize来切换页数
+      // 第一页 0，5 第二页 5，10 第三页 10，15
+      this.dataList = this.flightsData.flights.slice((this.pageIndex-1)*this.pageSize,this.pageIndex*this.pageSize)
+    }
   }
 };
 </script>
@@ -79,7 +90,7 @@ export default {
 .aside {
   width: 240px;
 }
-/deep/.el-pagination{
+/deep/.el-pagination {
   text-align: center;
 }
 </style>

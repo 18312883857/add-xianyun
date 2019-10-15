@@ -1,6 +1,6 @@
 <template>
   <div class="flight-item">
-    <div>
+    <div @click="isShow =!isShow">
       <!-- 显示的机票信息 -->
       <el-row type="flex" align="middle" class="flight-info">
         <el-col :span="6">
@@ -28,7 +28,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="flight-recommend">
+    <div class="flight-recommend" v-show="isShow">
       <!-- 隐藏的座位信息列表 -->
       <el-row
         type="flex"
@@ -70,7 +70,7 @@ export default {
     }
   },
   data() {
-    return {};
+    return { isShow: false };
   },
   computed: {
     rankTime() {
@@ -83,7 +83,7 @@ export default {
       let arrs = arr[0] * 60 + +arr[1];
       // 将到达时间减去出发时间
       let dist = arrs - depps;
-      if (arrs[0] < depps[0]) {
+      if (dist < 0) {
         dist = arrs + 24 * 60 - depps;
       }
       // 得到相差时间，进行字符串拼接 将分钟转换成小时 取余
