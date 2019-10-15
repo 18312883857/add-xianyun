@@ -11,7 +11,7 @@
         <FlightsListHead></FlightsListHead>
 
         <!-- 航班信息 -->
-        <div></div>
+        <FlightsItem v-for="(item,index) in flightsData" :key="index" :data="item"></FlightsItem>
       </div>
 
       <!-- 侧边栏 -->
@@ -25,12 +25,28 @@
 <script>
 // import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead";
+import FlightsItem from "@/components/air/flightsItem";
+
 export default {
   data() {
-    return {};
+    return {
+      flightsData: {}, // 航班总数据
+    };
   },
   components: {
-    FlightsListHead
+    FlightsListHead,
+    FlightsItem
+  },
+  mounted(){
+    
+    this.$axios({
+      url : '/airs',
+      params : this.$route.query
+    }).then(res=>{
+      // 接收总数据
+      this.flightsData = res.data
+      console.log(this.flightsData)
+    })
   }
 };
 </script>
