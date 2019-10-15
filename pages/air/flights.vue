@@ -21,7 +21,12 @@
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="flightsData.total"
+          v-if="flightsData.flights.length"
         ></el-pagination>
+        <div
+          v-if="flightsData.flights.length === 0 && !laoding"
+          style="padding: 50px; text-align:center"
+        >该航班暂时没有数据</div>
       </div>
 
       <!-- 侧边栏 -->
@@ -39,11 +44,14 @@ import FlightsItem from "@/components/air/flightsItem";
 export default {
   data() {
     return {
-      flightsData: {}, // 航班总数据
+      flightsData: {
+        flights : []
+      }, // 航班总数据
       // 从flights总列表数据中切割出来数组列表
       dataList: [],
       pageIndex: 1,
-      pageSize: 5
+      pageSize: 5,
+      laoding: true
     };
   },
   components: {
@@ -57,8 +65,10 @@ export default {
     }).then(res => {
       // 接收总数据
       this.flightsData = res.data;
+      console.log(this.flightsData);
       // 第一页的数据
-      this.dataList = this.flightsData.flights.slice(0,this.pageSize)
+      this.dataList = this.flightsData.flights.slice(0, this.pageSize);
+      this.laoding = false;
     });
   },
   methods: {
@@ -67,10 +77,13 @@ export default {
     // 页数切换时候触发, val是当前的页数
     handleCurrentChange(val) {
       // 当前切换的页数
-      this.pageIndex = val
+      this.pageIndex = val;
       // 利用pageIndex和pageSize来切换页数
       // 第一页 0，5 第二页 5，10 第三页 10，15
-      this.dataList = this.flightsData.flights.slice((this.pageIndex-1)*this.pageSize,this.pageIndex*this.pageSize)
+      this.dataList = this.flightsData.flights.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageIndex * this.pageSize
+      );
     }
   }
 };
