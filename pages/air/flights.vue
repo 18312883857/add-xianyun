@@ -12,6 +12,16 @@
 
         <!-- 航班信息 -->
         <FlightsItem v-for="(item,index) in flightsData.flights" :key="index" :data="item"></FlightsItem>
+        <!-- 分页器 -->
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageIndex"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="flightsData.total"
+        ></el-pagination>
       </div>
 
       <!-- 侧边栏 -->
@@ -26,27 +36,31 @@
 // import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead";
 import FlightsItem from "@/components/air/flightsItem";
-
 export default {
   data() {
     return {
       flightsData: {}, // 航班总数据
+      pageIndex: 1,
+      pageSize: 5
     };
   },
   components: {
     FlightsListHead,
     FlightsItem
   },
-  mounted(){
-    
+  mounted() {
     this.$axios({
-      url : '/airs',
-      params : this.$route.query
-    }).then(res=>{
+      url: "/airs",
+      params: this.$route.query
+    }).then(res => {
       // 接收总数据
-      this.flightsData = res.data
-      console.log(this.flightsData)
-    })
+      this.flightsData = res.data;
+      console.log(this.flightsData);
+    });
+  },
+  methods: {
+    handleSizeChange(val) {},
+    handleCurrentChange(val) {}
   }
 };
 </script>
@@ -64,5 +78,8 @@ export default {
 
 .aside {
   width: 240px;
+}
+/deep/.el-pagination{
+  text-align: center;
 }
 </style>
