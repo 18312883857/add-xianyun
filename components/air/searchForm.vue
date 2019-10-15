@@ -151,7 +151,7 @@ export default {
     // 确认选择日期时触发
     handleDate(value) {
         this.form.departDate = moment(value).format('YYYY-MM-DD')
-        console.log(this.form.departDate)
+        // console.log(this.form.departDate)
     },
 
     // 触发和目标城市切换时触发
@@ -180,6 +180,7 @@ export default {
         let valid = true
         // 将rules转化成数组，调用数组的方法
         Object.keys(rules).forEach(v=>{
+          if(!valid) return
             let {message,value} = rules[v]
             // 如果输入框的值为空，那么报错
             if(value === ''){

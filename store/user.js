@@ -49,7 +49,7 @@ export let actions = {
             method: "Post",
             data
         });
-        console.log(res)
+        // console.log(res)
         return res
     }
 }
