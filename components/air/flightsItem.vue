@@ -4,7 +4,8 @@
       <!-- 显示的机票信息 -->
       <el-row type="flex" align="middle" class="flight-info">
         <el-col :span="6">
-          <span>{{data.airline_name}}</span> {{data.flight_no}}
+          <span>{{data.airline_name}}</span>
+          {{data.flight_no}}
         </el-col>
         <el-col :span="12">
           <el-row type="flex" justify="space-between" class="flight-info-center">
@@ -13,7 +14,7 @@
               <span>{{data.org_airport_name}} {{data.org_airport_quay}}</span>
             </el-col>
             <el-col :span="8" class="flight-time">
-              <span>2时20分</span>
+              <span>{{rankTime}}</span>
             </el-col>
             <el-col :span="8" class="flight-airport">
               <strong>{{data.arr_time}}</strong>
@@ -29,12 +30,19 @@
     </div>
     <div class="flight-recommend">
       <!-- 隐藏的座位信息列表 -->
-      <el-row type="flex" justify="space-between" align="middle" v-for="(item,index) in data.seat_infos" :key="index">
+      <el-row
+        type="flex"
+        justify="space-between"
+        align="middle"
+        v-for="(item,index) in data.seat_infos"
+        :key="index"
+      >
         <el-col :span="4">低价推荐</el-col>
         <el-col :span="20">
           <el-row type="flex" justify="space-between" align="middle" class="flight-sell">
             <el-col :span="16" class="flight-sell-left">
-              <span>{{item.group_name}}</span> | {{item.supplierName}}
+              <span>{{item.group_name}}</span>
+              | {{item.supplierName}}
             </el-col>
             <el-col :span="5" class="price">￥{{item.org_settle_price_child}}</el-col>
             <el-col :span="3" class="choose-button">
@@ -50,9 +58,39 @@
 
 <script>
 export default {
-    props : {
-        data : {type : Object,default : {}}
+  props: {
+    data: {
+      type: Object,
+      default: () => {
+        return {
+          dep_time: "",
+          arr_time: ""
+        };
+      }
     }
+  },
+  data() {
+    return {};
+  },
+  computed: {
+    rankTime() {
+      // 切割成字符串数组
+      let dep = this.data.dep_time.split(":"); //[12:40]
+      let arr = this.data.arr_time.split(":"); //[23:00]
+      //   console.log(this.data.dep_tiem)
+      // 消失转换成分钟
+      let depps = dep[0] * 60 + +dep[1];
+      let arrs = arr[0] * 60 + +arr[1];
+      // 将到达时间减去出发时间
+      let dist = arrs - depps;
+      if (arrs[0] < depps[0]) {
+        dist = arrs + 24 * 60 - depps;
+      }
+      // 得到相差时间，进行字符串拼接 将分钟转换成小时 取余
+
+      return `${Math.floor(dist / 60)}时：${dist % 60}分`;
+    }
+  }
 };
 </script>
 
