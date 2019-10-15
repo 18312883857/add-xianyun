@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       flightsData: {
-        flights : []
+        flights: []
       }, // 航班总数据
       // 从flights总列表数据中切割出来数组列表
       dataList: [],
@@ -72,18 +72,23 @@ export default {
     });
   },
   methods: {
+    // 封装切换数据的函数
+    setDataList() {
+      // 利用pageIndex和pageSize来切换页数
+      // 第一页 0，5 第二页 5，10 第三页 10，15
+      this.dataList = this.flightsData.flights.slice((this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize);
+    },
     // 分页条数切换时候触发, val是当前的条数
-    handleSizeChange(val) {},
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.pageIndex = 1
+      this.setDataList()
+    },
     // 页数切换时候触发, val是当前的页数
     handleCurrentChange(val) {
       // 当前切换的页数
       this.pageIndex = val;
-      // 利用pageIndex和pageSize来切换页数
-      // 第一页 0，5 第二页 5，10 第三页 10，15
-      this.dataList = this.flightsData.flights.slice(
-        (this.pageIndex - 1) * this.pageSize,
-        this.pageIndex * this.pageSize
-      );
+      this.setDataList()
     }
   }
 };
