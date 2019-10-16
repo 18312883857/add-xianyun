@@ -29,8 +29,8 @@
     <div class="air-column">
       <h2>保险</h2>
       <div>
-        <div class="insurance-item">
-          <el-checkbox label="航空意外险：￥30/份×1  最高赔付260万" border></el-checkbox>
+        <div class="insurance-item" v-for="(item,index) in dataList.insurances" :key="index">
+          <el-checkbox :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`" border></el-checkbox>
         </div>
       </div>
     </div>
@@ -71,8 +71,24 @@ export default {
           uesrname: "",
           id: ""
         }
-      ]
+      ],
+      // 存储机票的信息
+      dataList: {
+      },
+      // 保险的信息
+      insurances: []
     };
+  },
+  mounted() {
+    let { id, seat_xid } = this.$route.query;
+    //   console.log(query)
+    this.$axios({
+      url: `airs/` + id,
+      params: { seat_xid }
+    }).then(res => {
+      this.dataList = res.data;
+      console.log(this.dataList)
+    });
   },
   methods: {
     // 添加乘机人
@@ -92,8 +108,8 @@ export default {
 
     // 提交订单
     handleSubmit() {},
-    clickInput(value){
-        console.log(value)
+    clickInput(value) {
+      console.log(value);
     }
   }
 };

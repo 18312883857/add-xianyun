@@ -2,7 +2,7 @@
   <div class="container">
     <el-row type="flex" justify="space-between">
       <!-- 订单表单 -->
-          <orderForm></orderForm>
+      <orderForm></orderForm>
       <!-- 侧边栏 -->
       <div class="aside"></div>
     </el-row>
@@ -12,9 +12,13 @@
 <script>
 import OrderForm from "@/components/air/orderForm";
 export default {
-    components : {
-        OrderForm
-    }
+  components: {
+    OrderForm
+  },
+  data() {
+    return {
+    };
+  },
 };
 </script>
 
