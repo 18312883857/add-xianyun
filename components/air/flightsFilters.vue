@@ -71,13 +71,48 @@ export default {
         { name: "大", size: "L" },
         { name: "中", size: "M" },
         { name: "小", size: "S" }
-      ]
+      ],
+      // 声明一个对象，用于存放筛选的数据
+      listOpions: {
+        airport: "",
+        flightTimes: "",
+        company: "",
+        airSize: ""
+      }
     };
   },
+  // 深度监听
+  // watch: {
+  //   listOpions: {
+  //     // 监听整个对象用deep
+  //     deep: true,
+  //     // 监听对象中的某个对象是immediate
+  //     // immediate: true,
+  //     handler() {
+        
+  //       let newData = { ...this.data };
+  //       let arr = newData.flights.filter(v => {
+  //         // 匹配条件
+  //         // 起飞机场  v.org_airport_name
+  //         // 起飞时间  v.dep_time
+  //         // 航空公司  v.airline_name
+  //         // 机型      v.plane_size
+  //         if (
+  //           this.listOpions.airport === v.org_airport_name ||
+  //           this.listOpions.flightTimes === v.airline_name
+  //         ) {
+  //           return v;
+  //         }
+  //         this.$emit("setdatalist", arr);
+  //       });
+  //     }
+  //   }
+  // },
   methods: {
     // 选择机场时候触发
     handleAirport(value) {
-      // 过滤数组
+      this.listOpions.airport = value;
+      // // 过滤数组
       let arr = this.data.flights.filter(v => {
         return v.org_airport_name == value;
       });
@@ -85,42 +120,48 @@ export default {
     },
     // 选择出发时间时候触发
     handleFlightTimes(value) {
-        // value是当前选取起飞时间 将字符串截取出来
-        let [from,to] = value.split(',')
-        let arr = this.data.flights.filter(v=>{
-            // // 出发的时间是小时
-            let start = +v.dep_time.split(':')[0] 
-            // 如果条件不成立，则表明没有该航班 
-            return start >= from && start < to
-        })
+      this.listOpions.flightTimes = value;
+
+      // value是当前选取起飞时间 将字符串截取出来
+      let [from, to] = value.split(",");
+      let arr = this.data.flights.filter(v => {
+        // // 出发的时间是小时
+        let start = +v.dep_time.split(":")[0];
+        // 如果条件不成立，则表明没有该航班
+        return start >= from && start < to;
+      });
       this.$emit("setdatalist", arr);
     },
 
     // 选择航空公司时候触发
     handleCompany(value) {
-        let arr = this.data.flights.filter(v=>{
-            return v.airline_name == value
-        })
+      this.listOpions.company = value;
+
+      let arr = this.data.flights.filter(v => {
+        return v.airline_name == value;
+      });
       this.$emit("setdatalist", arr);
     },
 
     // 选择机型时候触发
     handleAirSize(value) {
-        let arr = this.data.flights.filter(v=>{
-            return v.plane_size == value
-        })
+      this.listOpions.airSize = value;
+
+      let arr = this.data.flights.filter(v => {
+        return v.plane_size == value;
+      });
       this.$emit("setdatalist", arr);
     },
 
     // 撤销条件时候触发
     handleFiltersCancel() {
-        // 清空输入框里面的值
-        this.airport = ''
-        this.flightTimes = ''
-        this.company = ''
-        this.airSize = ''
-        // 传递原数组
-        this.$emit('setdatalist',this.data.flights)
+      // // 清空输入框里面的值
+      this.airport = "";
+      this.flightTimes = "";
+      this.company = "";
+      this.airSize = "";
+      // 传递原数组
+      this.$emit("setdatalist", this.data.flights);
     }
   }
 };

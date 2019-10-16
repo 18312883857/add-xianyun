@@ -46,7 +46,7 @@
             </el-col>
             <el-col :span="5" class="price">￥{{item.org_settle_price_child}}</el-col>
             <el-col :span="3" class="choose-button">
-              <el-button type="warning" size="mini">选定</el-button>
+              <el-button type="warning" size="mini" @click="handleChoose(data.id,item.seat_xid)">选定</el-button>
               <p>剩余：{{item.discount}}</p>
             </el-col>
           </el-row>
@@ -89,6 +89,14 @@ export default {
       // 得到相差时间，进行字符串拼接 将分钟转换成小时 取余
 
       return `${Math.floor(dist / 60)}时：${dist % 60}分`;
+    }
+  },
+  methods:{
+    handleChoose(id, seatId){
+      this.$router.push({
+        path : 'air/order',
+        query:{id:id,seat_xid:seatId}
+      })
     }
   }
 };

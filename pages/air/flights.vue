@@ -17,7 +17,7 @@
           :page-sizes="[5, 10, 15, 20]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="flightsData.total"
+          :total="total"
           v-if="flightsData.flights.length"
         ></el-pagination>
         <div
@@ -25,10 +25,10 @@
           style="padding: 50px; text-align:center"
         >该航班暂时没有数据</div>
       </div>
-
       <!-- 侧边栏 -->
       <div class="aside">
         <!-- 侧边栏组件 -->
+        <FlightsAside></FlightsAside>
       </div>
     </el-row>
   </section>
@@ -39,6 +39,7 @@
 import FlightsListHead from "@/components/air/flightsListHead";
 import FlightsItem from "@/components/air/flightsItem";
 import FlightsFilters from "@/components/air/flightsFilters";
+import FlightsAside from "@/components/air/flightsAside";
 export default {
   data() {
     // .过滤条件触发时候需要修改数组列表flightsData.flights，
@@ -60,16 +61,18 @@ export default {
         flights: [],
         info: {},
         options: {}
-      }
+      },
+      total : 0
     };
   },
   components: {
     FlightsListHead,
     FlightsItem,
-    FlightsFilters
+    FlightsFilters,
+    FlightsAside
   },
   mounted() {
-    this.getData()
+    this.getData();
   },
   computed: {
     // 从flights总列表数据中切割出来数组列表
@@ -95,16 +98,18 @@ export default {
         // 第一页的数据
         // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
         this.laoding = false;
+        this.total = this.flightsData.total
       });
     },
     // arr是用来展示的新数据，该方法将会传递给过滤组件使用
-    setDataList(arr){
-      console.log(arr)
-      if(!arr) return
-      // 如果有数据，从第一页开始显示
-      this.pageSize = 1
-      this.flightsData.flights = arr
-      this.flightsData.total = arr.length
+    setDataList(arr) {
+      console.log(arr);
+      if (arr) {
+        // 如果有数据，从第一页开始显示
+        this.flightsData.flights = arr
+        this.pageIndex = 1
+        this.total = arr.length
+      }
     },
     // 分页条数切换时候触发, val是当前的条数
     handleSizeChange(val) {
