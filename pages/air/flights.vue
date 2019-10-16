@@ -62,7 +62,7 @@ export default {
         info: {},
         options: {}
       },
-      total : 0
+      total: 0
     };
   },
   components: {
@@ -84,6 +84,12 @@ export default {
       return arr;
     }
   },
+  watch: {
+    // 监听路由，如果路由发生变化，就重新发送请求，刷新页面
+    $route() {
+      this.getData();
+    }
+  },
   methods: {
     getData() {
       this.$axios({
@@ -98,7 +104,7 @@ export default {
         // 第一页的数据
         // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
         this.laoding = false;
-        this.total = this.flightsData.total
+        this.total = this.flightsData.total;
       });
     },
     // arr是用来展示的新数据，该方法将会传递给过滤组件使用
@@ -106,9 +112,9 @@ export default {
       console.log(arr);
       if (arr) {
         // 如果有数据，从第一页开始显示
-        this.flightsData.flights = arr
-        this.pageIndex = 1
-        this.total = arr.length
+        this.flightsData.flights = arr;
+        this.pageIndex = 1;
+        this.total = arr.length;
       }
     },
     // 分页条数切换时候触发, val是当前的条数
