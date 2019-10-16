@@ -45,11 +45,11 @@
       <div class="contact">
         <el-form label-width="60px">
           <el-form-item label="姓名">
-            <el-input></el-input>
+            <el-input v-model="contactName"></el-input>
           </el-form-item>
 
           <el-form-item label="手机">
-            <el-input placeholder="请输入内容">
+            <el-input placeholder="请输入内容" v-model="contactPhone">
               <template slot="append">
                 <el-button @click="handleSendCaptcha">发送验证码</el-button>
               </template>
@@ -57,7 +57,7 @@
           </el-form-item>
 
           <el-form-item label="验证码">
-            <el-input></el-input>
+            <el-input v-model="captcha"></el-input>
           </el-form-item>
         </el-form>
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
@@ -80,7 +80,11 @@ export default {
       // 存储机票的信息
       dataList: {},
       // 保险的信息
-      insurances: []
+      insurances: [],
+      contactName: "", // 联系人名字
+      contactPhone: "", // 联系人电话
+      invoice: false, //不需要发票
+      captcha: "" //发送验证码
     };
   },
   mounted() {
@@ -111,7 +115,19 @@ export default {
     handleSendCaptcha() {},
 
     // 提交订单
-    handleSubmit() {},
+    handleSubmit() {
+      let data = {
+        users: this.users,
+        insurances: this.insurances,
+        contactName: this.contactName,
+        contactPhone: this.contactPhone,
+        invoice: this.invoice,
+        captcha: this.captcha,
+        seat_xid : this.$route.query.seat_xid,
+        air : this.$route.query.id
+      };
+      console.log(data)
+    },
     // 点击保险
     changeLable(id) {
       // 判断保险数组中是否有数据，如果有就删除，如果没有就添加 使用indexOf进行判断
