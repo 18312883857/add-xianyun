@@ -6,7 +6,7 @@
       <el-form class="member-info">
         <div class="member-info-item" v-for="(item,index) in users" :key="index">
           <el-form-item label="乘机人类型">
-            <el-input placeholder="姓名" class="input-with-select" v-model="item.uesrname">
+            <el-input placeholder="姓名" class="input-with-select" v-model="item.username">
               <el-select slot="prepend" value="1" placeholder="请选择">
                 <el-option label="成人" value="1"></el-option>
               </el-select>
@@ -73,7 +73,7 @@ export default {
       // 默认存了一份数据
       users: [
         {
-          uesrname: "",
+          username: "",
           id: ""
         }
       ],
@@ -95,7 +95,6 @@ export default {
       params: { seat_xid }
     }).then(res => {
       this.dataList = res.data;
-      console.log(this.dataList);
     });
   },
   methods: {
@@ -103,26 +102,23 @@ export default {
     handleAddUsers() {
       // 给user添加多一项数据
       this.users.push({ uesrname: "", id: "" });
-      console.log(this.users);
     },
-
     // 移除乘机人
     handleDeleteUser(index) {
       this.users.splice(index, 1);
     },
-
     // 发送手机验证码
     handleSendCaptcha() {
-        if(!this.contactPhone){
-            return this.$message.error(`手机号码不能为空`)
-        }
-        if(this.contactPhone.length !== 11){
-            return this.$message.error(`手机号码格式不对`)
-        }
-        this.$store.dispatch('user/register',this.contactPhone).then(res=>{
-            let {code} = res.data
-            this.$message.success(`验证码为：${code}`)
-        })
+      if (!this.contactPhone) {
+        return this.$message.error(`手机号码不能为空`);
+      }
+      if (this.contactPhone.length !== 11) {
+        return this.$message.error(`手机号码格式不对`);
+      }
+      this.$store.dispatch("user/register", this.contactPhone).then(res => {
+        let { code } = res.data;
+        this.$message.success(`验证码为：${code}`);
+      });
     },
 
     // 提交订单
@@ -135,15 +131,29 @@ export default {
         invoice: this.invoice,
         captcha: this.captcha,
         seat_xid: this.$route.query.seat_xid,
-        air: this.$route.query.id
+        air: +this.$route.query.id
       };
       this.$axios({
-          url : '/airorders',
-          data : data,
-          method : 'Post',
-      }).then(res=>{
-          console.log(res)
-      })
+        url: "/airorders",
+        data: data,
+        method: "Post",
+        //   需要请求头
+        headers: {
+          // 这是jwt标准的token
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+        }
+      }).then(res => {
+        let { message, status } = res.data;
+        if (status === 0) {
+          this.$message.success(`${message},请稍后~`);
+          setTimeout(() => {
+            // 跳转到付款页
+            this.$router.push({
+              path: "/air/pay"
+            });
+          }, 1500);
+        }
+      });
     },
     // 点击保险
     changeLable(id) {
