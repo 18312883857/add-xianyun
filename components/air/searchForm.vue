@@ -190,6 +190,8 @@ export default {
         })
         // 如果输入框的值为空，不执行下面的代码
         if(!valid) return
+        // 将数据保存到vuex仓库中
+        this.$store.commit('air/setHistory',this.form)
         // 跳转的时候，把整个表单的内容作为url地址的参数传递过去
         // $route.query 一个 key/value 对象，表示 URL 查询参数。例如，对于路径 /foo?user=1，则有
         // $route.query.user == 1，如果没有查询参数，则是个空对象
