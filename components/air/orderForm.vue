@@ -112,7 +112,12 @@ export default {
     },
 
     // 发送手机验证码
-    handleSendCaptcha() {},
+    handleSendCaptcha() {
+        this.$store.dispatch('user/register',this.contactPhone).then(res=>{
+            let {code} = res.data
+            this.$message.success(`验证码为：${code}`)
+        })
+    },
 
     // 提交订单
     handleSubmit() {
@@ -123,10 +128,10 @@ export default {
         contactPhone: this.contactPhone,
         invoice: this.invoice,
         captcha: this.captcha,
-        seat_xid : this.$route.query.seat_xid,
-        air : this.$route.query.id
+        seat_xid: this.$route.query.seat_xid,
+        air: this.$route.query.id
       };
-      console.log(data)
+      console.log(data);
     },
     // 点击保险
     changeLable(id) {
@@ -138,7 +143,6 @@ export default {
       } else {
         this.insurances.push(id);
       }
-      console.log(this.insurances);
     }
   }
 };
