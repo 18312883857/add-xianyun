@@ -30,7 +30,12 @@
       <h2>保险</h2>
       <div>
         <div class="insurance-item" v-for="(item,index) in dataList.insurances" :key="index">
-          <el-checkbox :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`" border></el-checkbox>
+          <!-- 表单特别拥有的一个change事件 -->
+          <el-checkbox
+            :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`"
+            border
+            @change="changeLable(item.id)"
+          ></el-checkbox>
         </div>
       </div>
     </div>
@@ -73,8 +78,7 @@ export default {
         }
       ],
       // 存储机票的信息
-      dataList: {
-      },
+      dataList: {},
       // 保险的信息
       insurances: []
     };
@@ -87,7 +91,7 @@ export default {
       params: { seat_xid }
     }).then(res => {
       this.dataList = res.data;
-      console.log(this.dataList)
+      console.log(this.dataList);
     });
   },
   methods: {
@@ -108,8 +112,17 @@ export default {
 
     // 提交订单
     handleSubmit() {},
-    clickInput(value) {
-      console.log(value);
+    // 点击保险
+    changeLable(id) {
+      // 判断保险数组中是否有数据，如果有就删除，如果没有就添加 使用indexOf进行判断
+      // 如果有数据，返回一个大于-1的数 如果没有就返回一个-1
+      let inset = this.insurances.indexOf(id);
+      if (inset > -1) {
+        this.insurances.splice(inset, 1);
+      } else {
+        this.insurances.push(id);
+      }
+      console.log(this.insurances);
     }
   }
 };
