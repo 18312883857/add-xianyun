@@ -1,27 +1,25 @@
 <template>
   <div class="main">
-
     <div class="air-column">
       <h2>乘机人</h2>
+
       <el-form class="member-info">
-        <div class="member-info-item">
+        <div class="member-info-item" v-for="(item,index) in users" :key="index">
           <el-form-item label="乘机人类型">
-            <el-input placeholder="姓名" class="input-with-select">
+            <el-input placeholder="姓名" class="input-with-select" v-model="item.uesrname">
               <el-select slot="prepend" value="1" placeholder="请选择">
                 <el-option label="成人" value="1"></el-option>
               </el-select>
             </el-input>
           </el-form-item>
-
           <el-form-item label="证件类型">
-            <el-input placeholder="证件号码" class="input-with-select">
+            <el-input placeholder="证件号码" class="input-with-select" v-model="item.id">
               <el-select slot="prepend" value="1" placeholder="请选择">
                 <el-option label="身份证" value="1" :checked="true"></el-option>
               </el-select>
             </el-input>
           </el-form-item>
-
-          <span class="delete-user" @click="handleDeleteUser()">-</span>
+          <span class="delete-user" @click="handleDeleteUser(index)">-</span>
         </div>
       </el-form>
 
@@ -60,24 +58,43 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      // 默认存了一份数据
+      users: [
+        {
+          uesrname: "",
+          id: ""
+        }
+      ]
+    };
+  },
   methods: {
     // 添加乘机人
-    handleAddUsers() {},
+    handleAddUsers() {
+      // 给user添加多一项数据
+      this.users.push({ uesrname: "", id: "" });
+      console.log(this.users);
+    },
 
     // 移除乘机人
-    handleDeleteUser() {},
+    handleDeleteUser(index) {
+      this.users.splice(index, 1);
+    },
 
     // 发送手机验证码
     handleSendCaptcha() {},
 
     // 提交订单
-    handleSubmit() {}
+    handleSubmit() {},
+    clickInput(value){
+        console.log(value)
+    }
   }
 };
 </script>
