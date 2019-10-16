@@ -94,7 +94,7 @@ export default {
   methods:{
     handleChoose(id, seatId){
       this.$router.push({
-        path : 'air/order',
+        path : '/air/order',
         query:{id:id,seat_xid:seatId}
       })
     }
