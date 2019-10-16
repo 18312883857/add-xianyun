@@ -12,5 +12,9 @@ export default (context)=>{
         if(statusCode === 400){
             Message.error(message)
         }
+        if(statusCode === 403){
+            // 重定向跳转到登录页 redirect是context的方法，就要跳转页面的功能
+            context.redirect("/user/login");
+        }
     })
 }

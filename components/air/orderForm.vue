@@ -113,6 +113,12 @@ export default {
 
     // 发送手机验证码
     handleSendCaptcha() {
+        if(!this.contactPhone){
+            return this.$message.error(`手机号码不能为空`)
+        }
+        if(this.contactPhone.length !== 11){
+            return this.$message.error(`手机号码格式不对`)
+        }
         this.$store.dispatch('user/register',this.contactPhone).then(res=>{
             let {code} = res.data
             this.$message.success(`验证码为：${code}`)
@@ -131,7 +137,13 @@ export default {
         seat_xid: this.$route.query.seat_xid,
         air: this.$route.query.id
       };
-      console.log(data);
+      this.$axios({
+          url : '/airorders',
+          data : data,
+          method : 'Post',
+      }).then(res=>{
+          console.log(res)
+      })
     },
     // 点击保险
     changeLable(id) {
