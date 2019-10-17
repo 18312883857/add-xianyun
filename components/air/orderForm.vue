@@ -167,13 +167,15 @@ export default {
           Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
         }
       }).then(res => {
-        let { message, status } = res.data;
+        let { message, status, id } = res.data;
+        console.log(res.data)
         if (status === 0) {
           this.$message.success(`${message},请稍后~`);
           setTimeout(() => {
             // 跳转到付款页
             this.$router.push({
-              path: "/air/pay"
+              path: "/air/pay",
+              query : {id:id}
             });
           }, 1500);
         }
