@@ -3,7 +3,7 @@
     <div class="main">
       <div class="pay-title">
         支付总金额
-        <span class="pay-price">￥ 1000</span>
+        <span class="pay-price">￥ {{price}}</span>
       </div>
       <div class="pay-main">
         <h4>微信支付</h4>
@@ -24,7 +24,14 @@
 </template>
 
 <script>
+// 生成二维码的包
+import QRCode from "qrcode";
 export default {
+  data(){
+    return{
+      price : ''
+    }
+  },
   mounted() {
     // 这个处理方法有缺陷  userinfo在页面中加载完才赋值
     // 获取路由ID
@@ -41,8 +48,16 @@ export default {
         }
       }).then(res => {
         console.log(res);
+        // 展示价格
+        this.price = res.data.price
+        // 生成二维码
+        let {payInfo} = res.data
+        // 生成二维码到canvas
+        // 获取盒子id
+        const stage = document.querySelector("#qrcode-stage");
+        QRCode.toCanvas(stage,payInfo.code_url,{width:200})
       });
-    }, 1000);
+    }, 500);
   }
 };
 </script>
