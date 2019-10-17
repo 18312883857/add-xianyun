@@ -2,10 +2,10 @@
   <div class="container">
     <el-row type="flex" justify="space-between">
       <!-- 订单表单 -->
-      <orderForm></orderForm>
+      <orderForm :data="infoData" @setallprice="setallprice"></orderForm>
       <!-- 侧边栏 -->
       <div class="aside">
-        <OrderAside :data="infoData"></OrderAside>
+        <OrderAside :data="infoData" :allPrice="allPrice"></OrderAside>
       </div>
     </el-row>
   </div>
@@ -25,10 +25,11 @@ export default {
       infoData: {
         insurances: [], //保险数据
         seat_infos: {} //订单信息
-      }
+      },
+      // 总金额
+      allPrice: 0
     };
   },
-  // 根据ID和参数请求该航班的订单信息
   mounted() {
     let { id, seat_xid } = this.$route.query;
     //   console.log(query)
@@ -37,9 +38,13 @@ export default {
       params: { seat_xid }
     }).then(res => {
       this.infoData = res.data
-      console.log(this.infoData)
     });
   },
+  methods : {
+    setallprice(price){
+      this.allPrice = price
+    }
+  }
 };
 </script>
 

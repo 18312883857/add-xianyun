@@ -2,7 +2,7 @@
   <div class="main">
     <div class="air-column">
       <h2>乘机人</h2>
-
+      <input type="hidden" :value="allPrice">
       <el-form class="member-info">
         <div class="member-info-item" v-for="(item,index) in users" :key="index">
           <el-form-item label="乘机人类型">
@@ -68,6 +68,9 @@
 
 <script>
 export default {
+  props: {
+    data: { type: Object, default: {} }
+  },
   data() {
     return {
       // 默认存了一份数据
@@ -84,8 +87,27 @@ export default {
       contactName: "", // 联系人名字
       contactPhone: "", // 联系人电话
       invoice: false, //不需要发票
-      captcha: "" //发送验证码
+      captcha: "", //发送验证码
+      // allPrice: 0 //总价格
     };
+  },
+  computed: {
+    // 计算总价格
+    allPrice() {
+      let price = 0;
+      let len = this.users.length;
+      // 乘机人与单价价格
+      price += this.data.seat_infos.org_settle_price * len;
+      // 保险信息，是否需要买保险 并且每一份保险的价格都是30元 也就是说一人30元的保险
+      this.insurances.forEach(v => {
+        price += this.data.insurances[v - 1].price * len;
+      });
+      // 燃油费
+      price += this.data.airport_tax_audlet * len;
+      // 通过事件将总金额传到父组件中
+      this.$emit("setallprice", price);
+      return price
+    }
   },
   mounted() {
     let { id, seat_xid } = this.$route.query;
@@ -157,13 +179,16 @@ export default {
     },
     // 点击保险
     changeLable(id) {
+
       // 判断保险数组中是否有数据，如果有就删除，如果没有就添加 使用indexOf进行判断
       // 如果有数据，返回一个大于-1的数 如果没有就返回一个-1
       let inset = this.insurances.indexOf(id);
       if (inset > -1) {
         this.insurances.splice(inset, 1);
+        this.allPrice--
       } else {
         this.insurances.push(id);
+        this.allPrice++
       }
     }
   }
