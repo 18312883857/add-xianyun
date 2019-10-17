@@ -2,6 +2,7 @@
   <div class="main">
     <div class="air-column">
       <h2>乘机人</h2>
+      <!-- 全局控制input值的变化 -->
       <input type="hidden" :value="allPrice">
       <el-form class="member-info">
         <div class="member-info-item" v-for="(item,index) in users" :key="index">
@@ -94,6 +95,7 @@ export default {
   computed: {
     // 计算总价格
     allPrice() {
+      // 与总价格有关的三个要素： 乘机人的个数 飞机燃油费 个人保险费
       let price = 0;
       let len = this.users.length;
       // 乘机人与单价价格
