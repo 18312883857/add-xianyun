@@ -55,6 +55,7 @@ export default {
         // 生成二维码到canvas
         // 获取盒子id
         const stage = document.querySelector("#qrcode-stage");
+        // 第一个参数是要设置二维码的位置  第二个参数生成二维码的url地址
         QRCode.toCanvas(stage,payInfo.code_url,{width:200})
       });
     }, 500);
