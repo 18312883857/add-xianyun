@@ -24,7 +24,27 @@
 </template>
 
 <script>
-export default {};
+export default {
+  mounted() {
+    // 这个处理方法有缺陷  userinfo在页面中加载完才赋值
+    // 获取路由ID
+    setTimeout(() => {
+      let { id } = this.$route.query;
+      // 获取存储在vuex里的token值 订单详情请求需要用到
+      let {
+        user: { userInfo }
+      } = this.$store.state;
+      this.$axios({
+        url: `airorders/${id}`,
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        }
+      }).then(res => {
+        console.log(res);
+      });
+    }, 1000);
+  }
+};
 </script>
 
 <style scoped lang="less">
