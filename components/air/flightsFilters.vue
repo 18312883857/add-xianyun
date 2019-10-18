@@ -74,83 +74,95 @@ export default {
       ],
       // 声明一个对象，用于存放筛选的数据
       listOpions: {
-        airport: "",
-        flightTimes: "",
-        company: "",
-        airSize: ""
-      }
+        airport: { key: "org_airport_name", value: "" },
+        flightTimes: { key: "dep_time", value: "" },
+        company: { key: "airline_name", value: "" },
+        airSize: { key: "plane_size", value: "" }
+      },
+      // 用于判断
+      flightTimes: ""
     };
   },
-  // 深度监听
-  // watch: {
-  //   listOpions: {
-  //     // 监听整个对象用deep
-  //     deep: true,
-  //     // 监听对象中的某个对象是immediate
-  //     // immediate: true,
-  //     handler() {
-        
-  //       let newData = { ...this.data };
-  //       let arr = newData.flights.filter(v => {
-  //         // 匹配条件
-  //         // 起飞机场  v.org_airport_name
-  //         // 起飞时间  v.dep_time
-  //         // 航空公司  v.airline_name
-  //         // 机型      v.plane_size
-  //         if (
-  //           this.listOpions.airport === v.org_airport_name ||
-  //           this.listOpions.flightTimes === v.airline_name
-  //         ) {
-  //           return v;
-  //         }
-  //         this.$emit("setdatalist", arr);
-  //       });
-  //     }
-  //   }
-  // },
   methods: {
+    // 多条件筛选
+    handleFliters() {
+      // 创建一个空数组用于接收数据
+      let arr = [];
+      // 遍历原数组的每一项
+      this.data.flights.forEach(item => {
+        // 这是一个开关
+        let flg = true;
+        // 遍历自定义对象
+        Object.keys(this.listOpions).forEach(v => {
+          // 此时数组里的每一项是没有值的
+          if (!this.listOpions[v].value) return;
+          else if (v === "flightTimes") {
+            // this.listOpions[v].value.split(",")  是一个数组 里面是一个键值对 key是原来的值 value是一个空字符串
+            let num = this.listOpions[v].value.split(","); //
+            let start = item.dep_time.split(":")[0];
+            if (start < +num[0] || start > +num[1]) {
+              flg = false;
+            }
+          } 
+          else if (
+            // 用来判断航空公司
+            item[this.listOpions[v].key] !== this.listOpions[v].value
+          ) {
+            flg = false;
+          }
+        });
+        if(flg){
+          arr.push(item)
+        }
+      });
+      this.$emit('setdatalist',arr)
+    },
     // 选择机场时候触发
     handleAirport(value) {
-      this.listOpions.airport = value;
-      // // 过滤数组
-      let arr = this.data.flights.filter(v => {
-        return v.org_airport_name == value;
-      });
-      this.$emit("setdatalist", arr);
+      this.listOpions.airport.value = value;
+      this.handleFliters();
+      // // // 过滤数组
+      // let arr = this.data.flights.filter(v => {
+      //   return v.org_airport_name == value;
+      // });
+      // this.$emit("setdatalist", arr);
     },
     // 选择出发时间时候触发
     handleFlightTimes(value) {
-      this.listOpions.flightTimes = value;
+      this.listOpions.flightTimes.value = value;
+      this.handleFliters();
 
-      // value是当前选取起飞时间 将字符串截取出来
-      let [from, to] = value.split(",");
-      let arr = this.data.flights.filter(v => {
-        // // 出发的时间是小时
-        let start = +v.dep_time.split(":")[0];
-        // 如果条件不成立，则表明没有该航班
-        return start >= from && start < to;
-      });
-      this.$emit("setdatalist", arr);
+      // // value是当前选取起飞时间 将字符串截取出来
+      // let [from, to] = value.split(",");
+      // let arr = this.data.flights.filter(v => {
+      //   // // 出发的时间是小时
+      //   let start = +v.dep_time.split(":")[0];
+      //   // 如果条件不成立，则表明没有该航班
+      //   return start >= from && start < to;
+      // });
+      // this.$emit("setdatalist", arr);
     },
 
     // 选择航空公司时候触发
     handleCompany(value) {
-      this.listOpions.company = value;
+      this.listOpions.company.value = value;
+      this.handleFliters();
 
-      let arr = this.data.flights.filter(v => {
-        return v.airline_name == value;
-      });
-      this.$emit("setdatalist", arr);
+      // let arr = this.data.flights.filter(v => {
+      //   return v.airline_name == value;
+      // });
+      // this.$emit("setdatalist", arr);
     },
 
     // 选择机型时候触发
     handleAirSize(value) {
-      this.listOpions.airSize = value;
+      this.listOpions.airSize.value = value;
+      this.handleFliters();
 
-      let arr = this.data.flights.filter(v => {
-        return v.plane_size == value;
-      });
-      this.$emit("setdatalist", arr);
+      // let arr = this.data.flights.filter(v => {
+      //   return v.plane_size == value;
+      // });
+      // this.$emit("setdatalist", arr);
     },
 
     // 撤销条件时候触发

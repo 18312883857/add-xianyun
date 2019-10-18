@@ -77,18 +77,18 @@ export default {
       // 默认存了一份数据
       users: [
         {
-          username: "",
-          id: ""
+          username: "123",
+          id: "123"
         }
       ],
       // 存储机票的信息
       dataList: {},
       // 保险的信息
       insurances: [],
-      contactName: "", // 联系人名字
-      contactPhone: "", // 联系人电话
+      contactName: "123", // 联系人名字
+      contactPhone: "13512341234", // 联系人电话
       invoice: false, //不需要发票
-      captcha: "", //发送验证码
+      captcha: "000000", //发送验证码
       // allPrice: 0 //总价格
     };
   },

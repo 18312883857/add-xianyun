@@ -47,16 +47,23 @@ export default {
           Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
         }
       });
-      let order = res.data;
-      console.log(order.price, order.orderNo);
+      this.order = res.data;
       // 第一个参数是要设置二维码的位置  第二个参数生成二维码的url地址
       QRCode.toCanvas(
         document.querySelector("#qrcode-stage"),
-        order.payInfo.code_url,
+        this.order.payInfo.code_url,
         { width: 200 }
       );
       // 查询接口3秒查询一次，如果已付款会弹窗提示并停止继续查询，页面销毁也会停止查询。
       this.timer = setInterval(async () => {
+        console.log({
+          id: this.$route.query.id, //订单id
+          // nonce_str: this.order.price, //订单金额
+          // out_trade_no: this.order.orderNo //订单编号
+          nonce_str: this.order.price,
+          out_trade_no: this.order.orderNo
+        });
+
         let obj = await this.$axios({
           url: `/airorders/checkpay`,
           method: "Post",
@@ -64,11 +71,9 @@ export default {
             Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
           },
           data: {
-            id:this.$route.query.id, //订单id
-            // nonce_str: this.order.price, //订单金额
-            // out_trade_no: this.order.orderNo //订单编号
-            nonce_str:this.order.price,
-            out_trade_no:this.order.orderNo
+            id: this.$route.query.id, //订单id
+            nonce_str: this.order.price, //订单金额
+            out_trade_no: this.order.orderNo //订单编号
           }
         });
 
@@ -81,9 +86,9 @@ export default {
           this.$message.success(statusTxt);
           clearInterval(this.timer);
         }
-        clearInterval(this.timer);
+        // clearInterval(this.timer);
       }, 3000);
-    }, 500);
+    }, 50);
   },
   // 页面销毁，即主要离开这个组件，那么就会销毁里面的东西，主要用于清除定时器
   destroyed() {
