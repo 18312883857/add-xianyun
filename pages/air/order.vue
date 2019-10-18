@@ -31,11 +31,9 @@ export default {
     };
   },
   methods : {
-    // 总价格
     setallprice(price){
       this.allPrice = price
     },
-    // 表单数据
     getDetail(dataList){
       this.infoData = dataList
     }

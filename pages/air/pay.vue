@@ -3,7 +3,7 @@
     <div class="main">
       <div class="pay-title">
         支付总金额
-        <span class="pay-price">￥ {{price}}</span>
+        <span class="pay-price">￥ {{order.price}}</span>
       </div>
       <div class="pay-main">
         <h4>微信支付</h4>
@@ -31,84 +31,64 @@ export default {
   data() {
     return {
       price: "",
-      timer: null
+      timer: null,
+      order: {}
     };
-  },
-  methods: {
-    async payment(data) {
-      let { id } = this.$route.query;
-      let {
-        air,
-        user: { userInfo }
-      } = this.$store.state;
-      return this.$axios({
-        url: `airorders/checkpay`,
-        method: "Post",
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`
-        },
-        data: {
-          id, //订单id
-          nonce_str: +data.nonce_str, //订单金额
-          out_trade_no: data.out_trade_no //订单编号
-        }
-      }).then(res => {
-        let { statusTxt } = res.data;
-        console.log(res.data, statusTxt);
-        if (statusTxt === "支付完成") {
-          this.$message.success(`支付成功`);
-          return Promise.resolve(true);
-        }
-        if(statusTxt === "订单已关闭"){
-          this.$message.error(`订单已关闭`);
-          return Promise.resolve(false);
-        }
-          return Promise.resolve(false);
-      });
-    }
-  },
-  destroyed() {
-    clearInterval(this.timer);
   },
   mounted() {
     // 这个处理方法有缺陷  userinfo在页面中加载完才赋值
     // 获取路由ID
-    setTimeout(() => {
-      let { id } = this.$route.query;
+    setTimeout(async () => {
+      let id = this.$route.query.id;
       // 获取存储在vuex里的token值 订单详情请求需要用到
-      let {
-        user: { userInfo }
-      } = this.$store.state;
-      this.$axios({
-        url: `airorders/${id}`,
+      let res = await this.$axios({
+        url: `/airorders/` + id,
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
         }
-      }).then(res => {
-        // 展示价格
-        this.price = res.data.price;
-        // 生成二维码
-        let { payInfo } = res.data;
-        // 生成二维码到canvas
-        // 获取盒子id
-        const stage = document.querySelector("#qrcode-stage");
-        // 第一个参数是要设置二维码的位置  第二个参数生成二维码的url地址
-        QRCode.toCanvas(stage, payInfo.code_url, { width: 200 });
-        // 查询接口3秒查询一次，如果已付款会弹窗提示并停止继续查询，页面销毁也会停止查询。
-        this.timer = setInterval(async () => {
-          // 调用函数并将生成二维码的对象当成参数传过去
-          let isResolve = await this.payment(payInfo);
-          // 能够打印出是否已付款的信息
-          // console.log(isResolve);
-          // 如果已付款 那么停止查询，页面销毁
-          if (isResolve) {
-            clearInterval(this.timer);
-            return;
-          }
-        }, 3000);
       });
+      let order = res.data;
+      console.log(order.price, order.orderNo);
+      // 第一个参数是要设置二维码的位置  第二个参数生成二维码的url地址
+      QRCode.toCanvas(
+        document.querySelector("#qrcode-stage"),
+        order.payInfo.code_url,
+        { width: 200 }
+      );
+      // 查询接口3秒查询一次，如果已付款会弹窗提示并停止继续查询，页面销毁也会停止查询。
+      this.timer = setInterval(async () => {
+        let obj = await this.$axios({
+          url: `/airorders/checkpay`,
+          method: "Post",
+          headers: {
+            Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+          },
+          data: {
+            id:this.$route.query.id, //订单id
+            // nonce_str: this.order.price, //订单金额
+            // out_trade_no: this.order.orderNo //订单编号
+            nonce_str:this.order.price,
+            out_trade_no:this.order.orderNo
+          }
+        });
+
+        let { statusTxt } = obj.data;
+        console.log(obj.data, statusTxt);
+        // 能够打印出是否已付款的信息
+        // console.log(isResolve);
+        // 如果已付款 那么停止查询，页面销毁
+        if (statusTxt === "支付完成") {
+          this.$message.success(statusTxt);
+          clearInterval(this.timer);
+        }
+        clearInterval(this.timer);
+      }, 3000);
     }, 500);
   },
+  // 页面销毁，即主要离开这个组件，那么就会销毁里面的东西，主要用于清除定时器
+  destroyed() {
+    clearInterval(this.timer);
+  }
 };
 </script>
 

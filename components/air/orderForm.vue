@@ -3,7 +3,7 @@
     <div class="air-column">
       <h2>乘机人</h2>
       <!-- 全局控制input值的变化 -->
-      <input type="hidden" :value="allPrice">
+      <span v-show="false">{{allPrice}}</span>
       <el-form class="member-info">
         <div class="member-info-item" v-for="(item,index) in users" :key="index">
           <el-form-item label="乘机人类型">
@@ -95,18 +95,18 @@ export default {
   computed: {
     // 计算总价格
     allPrice() {
-      // 与总价格有关的三个要素： 乘机人的个数 飞机燃油费 个人保险费
-      let price = 0;
-      let len = this.users.length;
-      // 乘机人与单价价格
-      price += this.data.seat_infos.org_settle_price * len;
-      // 保险信息，是否需要买保险 并且每一份保险的价格都是30元 也就是说一人30元的保险
-      this.insurances.forEach(v => {
-        price += this.data.insurances[v - 1].price * len;
-      });
+      if(!this.data.seat_infos) return
+      // 总价格初始值
+      let price = 0
+      // 单价
+      price += this.data.seat_infos.org_settle_price
       // 燃油费
-      price += this.data.airport_tax_audlet * len;
-      // 通过事件将总金额传到父组件中
+      price += this.data.airport_tax_audlet
+      // 保险
+      price += this.insurances.length * 30
+      // 人数
+      price *= this.users.length
+      // // 通过事件将总金额传到父组件中
       this.$emit("setallprice", price);
       return price
     }
@@ -191,10 +191,8 @@ export default {
       let inset = this.insurances.indexOf(id);
       if (inset > -1) {
         this.insurances.splice(inset, 1);
-        this.allPrice--
       } else {
         this.insurances.push(id);
-        this.allPrice++
       }
     }
   }
