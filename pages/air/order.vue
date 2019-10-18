@@ -2,7 +2,7 @@
   <div class="container">
     <el-row type="flex" justify="space-between">
       <!-- 订单表单 -->
-      <orderForm :data="infoData" @setallprice="setallprice"></orderForm>
+      <orderForm :data="infoData" @setallprice="setallprice" @getDetail="getDetail"></orderForm>
       <!-- 侧边栏 -->
       <div class="aside">
         <OrderAside :data="infoData" :allPrice="allPrice"></OrderAside>
@@ -30,19 +30,14 @@ export default {
       allPrice: 0
     };
   },
-  mounted() {
-    let { id, seat_xid } = this.$route.query;
-    //   console.log(query)
-    this.$axios({
-      url: `airs/` + id,
-      params: { seat_xid }
-    }).then(res => {
-      this.infoData = res.data
-    });
-  },
   methods : {
+    // 总价格
     setallprice(price){
       this.allPrice = price
+    },
+    // 表单数据
+    getDetail(dataList){
+      this.infoData = dataList
     }
   }
 };

@@ -119,6 +119,7 @@ export default {
       params: { seat_xid }
     }).then(res => {
       this.dataList = res.data;
+      this.$emit('getDetail',this.dataList)
     });
   },
   methods: {

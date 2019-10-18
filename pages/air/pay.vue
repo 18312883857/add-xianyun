@@ -59,7 +59,11 @@ export default {
           this.$message.success(`支付成功`);
           return Promise.resolve(true);
         }
-        return Promise.resolve(false);
+        if(statusTxt === "订单已关闭"){
+          this.$message.error(`订单已关闭`);
+          return Promise.resolve(false);
+        }
+          return Promise.resolve(false);
       });
     }
   },
