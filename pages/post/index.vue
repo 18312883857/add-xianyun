@@ -203,6 +203,7 @@ export default {
         let { data } = res.data;
         this.total = res.data.total;
         this.textLists = data;
+        scrollTo(0,0)
       });
     },
     // 切换页数
