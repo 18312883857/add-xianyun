@@ -90,7 +90,6 @@ export default {
         let arr = this.data.flights.filter(v => {
           // 假设四个条件都是有效的
           let flg = true;
-          console.log(v);
           // 判断起飞机场
           if (
             this.listOpions.airport &&
@@ -111,15 +110,18 @@ export default {
             this.listOpions.company &&
             this.listOpions.company !== v.airline_name
           ) {
-            flg = true;
+            flg = false;
           }
           // 判断飞机型号
-          if (this.filters.airSize && this.filters.airSize !== v.plane_size) {
-            valid = false;
+          if (
+            this.listOpions.airSize &&
+            this.listOpions.airSize !== v.plane_size
+          ) {
+            flg = false;
           }
-          return flg
+          return flg;
         });
-        this.$emit('setdatalist',arr)
+        this.$emit("setdatalist", arr);
       }
     }
   },

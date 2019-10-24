@@ -111,18 +111,6 @@ export default {
     },
     // 失去焦点事件，默认下拉列表选中第一个
     handleBlur(type) {
-      // 旧方法
-      //   if (this.list.length > 0) {
-      //     // 如果不在下拉列表中选择，则默认选中第一项
-      //     if(type === 'dest'){
-      //         this.form.departCity = this.list[0].value
-      //         this.form.departCode = this.list[0].sort
-      //     }
-      //     if(type === 'depart'){
-      //         this.form.destCity = this.list[0].value
-      //         this.form.destCode = this.list[0].sort
-      //     }
-      //   }
       // 如果输入框内没有值 就不显示默认内容
       if (this.list.length === 0) return;
       this.form[type + `City`] = this.list[0].value;

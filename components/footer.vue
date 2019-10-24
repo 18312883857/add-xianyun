@@ -64,6 +64,7 @@ export default {};
   padding-top: 30px;
   margin: 0 auto;
   width: 1000px;
+  // margin-top: 200px;
 }
 
 .info-list {
