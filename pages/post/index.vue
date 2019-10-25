@@ -3,7 +3,7 @@
   <div class="neteva">
     <!-- 左右布局 左边是侧边导航栏 右边是版心 -->
     <el-container>
-      <el-aside width="250px">
+      <div width="250px">
         <!-- 导航栏 -->
         <div class="tab">
           <el-menu
@@ -25,7 +25,7 @@
                 @click="clickCity(items.city)"
               >
                 <i style="font-size:20px;color:#ffa500">{{index+1}}</i>
-                <a href="#">{{items.city}} {{items.desc}}</a>
+                <a href="javascript:;">{{items.city}} {{items.desc}}</a>
               </el-menu-item>
             </el-submenu>
           </el-menu>
@@ -33,11 +33,11 @@
         <div class="listout">
           <h4 class="left">推荐城市</h4>
           <!-- 图片链接 -->
-          <a href="#">
+          <a href="javascript:;">
             <img src="@/static/image/3319942085.jpg" alt />
           </a>
         </div>
-      </el-aside>
+      </div>
       <el-container>
         <el-header style="height:90px">
           <div class="demo-input-suffix">
@@ -51,9 +51,7 @@
           </div>
           <div class="demo-box">
             <span>推荐城市</span> ：
-            <a href="#">北京</a>
-            <a href="#">上海</a>
-            <a href="#">广州</a>
+            <a href="javascript:;" v-for="(item,index) in RecommendCity" :key="index" @click="clickCity(item)">{{item}}</a>
           </div>
         </el-header>
         <el-main class="el-main">
@@ -79,12 +77,12 @@
 
 <script>
 import postCity from "@/components/post/postCity";
-
+import {Scrollevent} from '@/utlis/Scroll.js';
 export default {
   components: {
     postCity
   },
-  data() {
+  data(){
     return {
       // input: "",
       isShow: false,
@@ -96,7 +94,8 @@ export default {
       value: "",
       limit: 10,
       start: 0,
-      total: 0
+      total: 0,
+      RecommendCity : ['北京','上海','广州']
     };
   },
   mounted() {
@@ -109,55 +108,7 @@ export default {
       this.clickCity();
     });
     // 回到顶部事件
-    function name() {
-      window.onload = function() {
-        var obtn = document.getElementById("btn"); //获取回到顶部按钮的ID
-        var clientHeight = document.documentElement.clientHeight; //获取可视区域的高度
-        var timer = null; //定义一个定时器
-        var isTop = true; //定义一个布尔值，用于判断是否到达顶部
-
-        window.onscroll = function() {
-          //滚动条滚动事件
-
-          //获取滚动条的滚动高度
-          var osTop =
-            document.documentElement.scrollTop || document.body.scrollTop;
-
-          if (osTop >= clientHeight) {
-            //如果滚动高度大于可视区域高度，则显示回到顶部按钮
-            obtn.style.display = "block";
-          } else {
-            //否则隐藏
-            obtn.style.display = "none";
-          }
-
-          //主要用于判断当 点击回到顶部按钮后 滚动条在回滚过程中，若手动滚动滚动条，则清除定时器
-          if (!isTop) {
-            clearInterval(timer);
-          }
-          isTop = false;
-        };
-
-        obtn.onclick = function() {
-          //回到顶部按钮点击事件
-          //设置一个定时器
-          timer = setInterval(function() {
-            //获取滚动条的滚动高度
-            var osTop =
-              document.documentElement.scrollTop || document.body.scrollTop;
-            //用于设置速度差，产生缓动的效果
-            var speed = Math.floor(-osTop / 6);
-            document.documentElement.scrollTop = document.body.scrollTop =
-              osTop + speed;
-            isTop = true; //用于阻止滚动事件清除定时器
-            if (osTop == 0) {
-              clearInterval(timer);
-            }
-          }, 30);
-        };
-      };
-    }
-    name()
+    return Scrollevent()
   },
   methods: {
     //  文章列表
@@ -215,9 +166,7 @@ export default {
         _limit: this.limit
       };
       this.name(params);
-    }
-    // 回到顶部
-    // clickTop() {}
+    },
   }
 };
 </script>
@@ -261,6 +210,7 @@ a {
       span,
       a {
         font-size: 12px;
+        padding-left: 10px;
       }
     }
   }
